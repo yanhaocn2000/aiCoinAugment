@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分类浏览 - 流影社</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #0F0F0F;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+        }
+        
+        .category-tab {
+            background: rgba(26,26,26,0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 8px 16px;
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+        
+        .category-tab.active {
+            background: #FF6B6B;
+            color: white;
+            border-color: #FF6B6B;
+        }
+        
+        .filter-button {
+            background: rgba(26,26,26,0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 8px 12px;
+            color: #666;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .filter-button.active {
+            background: rgba(255,107,107,0.2);
+            color: #FF6B6B;
+            border-color: #FF6B6B;
+        }
+        
+        .movie-card {
+            background: #1A1A1A;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        
+        .movie-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(255,107,107,0.2);
+        }
+        
+        .movie-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+        }
+        
+        .movie-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.9));
+            padding: 16px 12px 12px;
+        }
+        
+        .rating {
+            background: rgba(255,193,7,0.2);
+            color: #FFC107;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .movie-card:hover .play-overlay {
+            opacity: 1;
+        }
+        
+        .play-button {
+            background: #FF6B6B;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+        
+        .scroll-container {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        
+        .search-bar {
+            background: rgba(26,26,26,0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: white;
+            width: 100%;
+        }
+        
+        .search-bar::placeholder {
+            color: #666;
+        }
+    </style>
+</head>
+<body class="p-4 pb-0">
+    <!-- 顶部搜索 -->
+    <div class="flex items-center gap-3 mb-6">
+        <div class="flex-1">
+            <input type="text" placeholder="搜索你想看的内容..." class="search-bar">
+        </div>
+        <button class="text-gray-400 text-xl">
+            <i class="fas fa-sliders-h"></i>
+        </button>
+    </div>
+
+    <!-- 分类标签 -->
+    <div class="scroll-container mb-6">
+        <button class="category-tab active">全部</button>
+        <button class="category-tab">电影</button>
+        <button class="category-tab">电视剧</button>
+        <button class="category-tab">综艺</button>
+        <button class="category-tab">动漫</button>
+        <button class="category-tab">纪录片</button>
+        <button class="category-tab">短片</button>
+    </div>
+
+    <!-- 筛选器 -->
+    <div class="mb-6">
+        <div class="flex items-center gap-2 mb-3">
+            <span class="text-sm text-gray-400">类型:</span>
+            <div class="flex gap-2 flex-wrap">
+                <button class="filter-button active">全部</button>
+                <button class="filter-button">动作</button>
+                <button class="filter-button">科幻</button>
+                <button class="filter-button">爱情</button>
+                <button class="filter-button">喜剧</button>
+                <button class="filter-button">悬疑</button>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-2 mb-3">
+            <span class="text-sm text-gray-400">地区:</span>
+            <div class="flex gap-2 flex-wrap">
+                <button class="filter-button active">全部</button>
+                <button class="filter-button">中国大陆</button>
+                <button class="filter-button">美国</button>
+                <button class="filter-button">日本</button>
+                <button class="filter-button">韩国</button>
+            </div>
+        </div>
+        
+        <div class="flex items-center gap-2">
+            <span class="text-sm text-gray-400">年份:</span>
+            <div class="flex gap-2 flex-wrap">
+                <button class="filter-button active">全部</button>
+                <button class="filter-button">2024</button>
+                <button class="filter-button">2023</button>
+                <button class="filter-button">2022</button>
+                <button class="filter-button">更早</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 电影网格 -->
+    <div class="grid-container">
+        <div class="movie-card">
+            <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=200&h=300&fit=crop" 
+                 alt="电影海报" class="movie-poster">
+            <div class="play-overlay">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="movie-info">
+                <h4 class="font-medium text-sm mb-1">肖申克的救赎</h4>
+                <div class="flex items-center justify-between">
+                    <span class="rating">9.7</span>
+                    <span class="text-xs text-gray-400">1994</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="movie-card">
+            <img src="https://images.unsplash.com/photo-1489599735734-79b4169c2a78?w=200&h=300&fit=crop" 
+                 alt="电影海报" class="movie-poster">
+            <div class="play-overlay">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="movie-info">
+                <h4 class="font-medium text-sm mb-1">流浪地球2</h4>
+                <div class="flex items-center justify-between">
+                    <span class="rating">8.3</span>
+                    <span class="text-xs text-gray-400">2023</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="movie-card">
+            <img src="https://images.unsplash.com/photo-1478720568477-b0ac8b6e7c8a?w=200&h=300&fit=crop" 
+                 alt="电影海报" class="movie-poster">
+            <div class="play-overlay">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="movie-info">
+                <h4 class="font-medium text-sm mb-1">星际穿越</h4>
+                <div class="flex items-center justify-between">
+                    <span class="rating">9.3</span>
+                    <span class="text-xs text-gray-400">2014</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="movie-card">
+            <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=200&h=300&fit=crop" 
+                 alt="电影海报" class="movie-poster">
+            <div class="play-overlay">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="movie-info">
+                <h4 class="font-medium text-sm mb-1">复仇者联盟</h4>
+                <div class="flex items-center justify-between">
+                    <span class="rating">8.7</span>
+                    <span class="text-xs text-gray-400">2012</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="movie-card">
+            <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=200&h=300&fit=crop" 
+                 alt="电影海报" class="movie-poster">
+            <div class="play-overlay">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="movie-info">
+                <h4 class="font-medium text-sm mb-1">盗梦空间</h4>
+                <div class="flex items-center justify-between">
+                    <span class="rating">9.3</span>
+                    <span class="text-xs text-gray-400">2010</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="movie-card">
+            <img src="https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=200&h=300&fit=crop" 
+                 alt="电影海报" class="movie-poster">
+            <div class="play-overlay">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="movie-info">
+                <h4 class="font-medium text-sm mb-1">泰坦尼克号</h4>
+                <div class="flex items-center justify-between">
+                    <span class="rating">9.4</span>
+                    <span class="text-xs text-gray-400">1997</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="movie-card">
+            <img src="https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=200&h=300&fit=crop" 
+                 alt="电影海报" class="movie-poster">
+            <div class="play-overlay">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="movie-info">
+                <h4 class="font-medium text-sm mb-1">黑豹2</h4>
+                <div class="flex items-center justify-between">
+                    <span class="rating">7.8</span>
+                    <span class="text-xs text-gray-400">2022</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="movie-card">
+            <img src="https://images.unsplash.com/photo-1509347528160-9329d33b2588?w=200&h=300&fit=crop" 
+                 alt="电影海报" class="movie-poster">
+            <div class="play-overlay">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="movie-info">
+                <h4 class="font-medium text-sm mb-1">雷神4</h4>
+                <div class="flex items-center justify-between">
+                    <span class="rating">7.5</span>
+                    <span class="text-xs text-gray-400">2022</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="movie-card">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=300&fit=crop" 
+                 alt="电影海报" class="movie-poster">
+            <div class="play-overlay">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+            </div>
+            <div class="movie-info">
+                <h4 class="font-medium text-sm mb-1">蜘蛛侠</h4>
+                <div class="flex items-center justify-between">
+                    <span class="rating">8.2</span>
+                    <span class="text-xs text-gray-400">2021</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 分类标签切换
+        document.querySelectorAll('.category-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        // 筛选按钮切换
+        document.querySelectorAll('.filter-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const parent = this.parentElement;
+                parent.querySelectorAll('.filter-button').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>
