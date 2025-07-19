@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>首页 - 流影社</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: #0F0F0F;
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, rgba(255,107,107,0.3) 0%, rgba(255,107,107,0.1) 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .hero-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            opacity: 0.8;
+        }
+        
+        .hero-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            padding: 20px;
+        }
+        
+        .content-card {
+            background: #1A1A1A;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .content-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(255,107,107,0.2);
+        }
+        
+        .content-image {
+            width: 120px;
+            height: 160px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #FF6B6B;
+        }
+        
+        .scroll-container {
+            display: flex;
+            gap: 12px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .search-bar {
+            background: rgba(26,26,26,0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: white;
+            width: 100%;
+        }
+        
+        .search-bar::placeholder {
+            color: #666;
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid #FF6B6B;
+        }
+        
+        .notification-badge {
+            position: relative;
+        }
+        
+        .notification-badge::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: #FF6B6B;
+            border-radius: 50%;
+        }
+        
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255,107,107,0.9);
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .content-card:hover .play-button {
+            opacity: 1;
+        }
+        
+        .rating {
+            background: rgba(255,193,7,0.2);
+            color: #FFC107;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body class="p-4 pb-0">
+    <!-- 顶部导航 -->
+    <div class="flex items-center justify-between mb-6">
+        <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=64&h=64&fit=crop&crop=face" 
+             alt="用户头像" class="user-avatar">
+        
+        <div class="flex-1 mx-4">
+            <input type="text" placeholder="搜索电影、电视剧..." class="search-bar">
+        </div>
+        
+        <div class="notification-badge">
+            <i class="fas fa-bell text-xl text-gray-400"></i>
+        </div>
+    </div>
+
+    <!-- 精选推荐轮播 -->
+    <div class="hero-section mb-6">
+        <img src="https://images.unsplash.com/photo-1489599735734-79b4169c2a78?w=400&h=200&fit=crop" 
+             alt="精选内容" class="hero-image">
+        <div class="hero-content">
+            <h2 class="text-xl font-bold mb-2">流浪地球2</h2>
+            <p class="text-sm text-gray-300 mb-3">科幻 · 2023 · 豆瓣8.3分</p>
+            <div class="flex gap-3">
+                <button class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded-full text-sm font-medium transition-colors">
+                    <i class="fas fa-play mr-2"></i>立即播放
+                </button>
+                <button class="bg-gray-700 hover:bg-gray-600 px-6 py-2 rounded-full text-sm font-medium transition-colors">
+                    <i class="fas fa-plus mr-2"></i>加入收藏
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 继续观看 -->
+    <div class="mb-6">
+        <h3 class="section-title">继续观看</h3>
+        <div class="scroll-container">
+            <div class="content-card flex-shrink-0 relative">
+                <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=120&h=160&fit=crop" 
+                     alt="电影海报" class="content-image">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="p-3">
+                    <h4 class="font-medium text-sm mb-1">肖申克的救赎</h4>
+                    <div class="flex items-center justify-between">
+                        <span class="rating">9.7</span>
+                        <span class="text-xs text-gray-400">已看65%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card flex-shrink-0 relative">
+                <img src="https://images.unsplash.com/photo-1489599735734-79b4169c2a78?w=120&h=160&fit=crop" 
+                     alt="电影海报" class="content-image">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="p-3">
+                    <h4 class="font-medium text-sm mb-1">阿凡达2</h4>
+                    <div class="flex items-center justify-between">
+                        <span class="rating">8.1</span>
+                        <span class="text-xs text-gray-400">已看23%</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card flex-shrink-0 relative">
+                <img src="https://images.unsplash.com/photo-1478720568477-b0ac8b6e7c8a?w=120&h=160&fit=crop" 
+                     alt="电影海报" class="content-image">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="p-3">
+                    <h4 class="font-medium text-sm mb-1">星际穿越</h4>
+                    <div class="flex items-center justify-between">
+                        <span class="rating">9.3</span>
+                        <span class="text-xs text-gray-400">已看89%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 热门推荐 -->
+    <div class="mb-6">
+        <h3 class="section-title">热门推荐</h3>
+        <div class="scroll-container">
+            <div class="content-card flex-shrink-0 relative">
+                <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=120&h=160&fit=crop" 
+                     alt="电影海报" class="content-image">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="p-3">
+                    <h4 class="font-medium text-sm mb-1">复仇者联盟</h4>
+                    <div class="flex items-center justify-between">
+                        <span class="rating">8.7</span>
+                        <span class="text-xs text-gray-400">动作</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card flex-shrink-0 relative">
+                <img src="https://images.unsplash.com/photo-1485846234645-a62644f84728?w=120&h=160&fit=crop" 
+                     alt="电影海报" class="content-image">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="p-3">
+                    <h4 class="font-medium text-sm mb-1">盗梦空间</h4>
+                    <div class="flex items-center justify-between">
+                        <span class="rating">9.3</span>
+                        <span class="text-xs text-gray-400">科幻</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card flex-shrink-0 relative">
+                <img src="https://images.unsplash.com/photo-1594909122845-11baa439b7bf?w=120&h=160&fit=crop" 
+                     alt="电影海报" class="content-image">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="p-3">
+                    <h4 class="font-medium text-sm mb-1">泰坦尼克号</h4>
+                    <div class="flex items-center justify-between">
+                        <span class="rating">9.4</span>
+                        <span class="text-xs text-gray-400">爱情</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新上线 -->
+    <div class="mb-6">
+        <h3 class="section-title">新上线</h3>
+        <div class="scroll-container">
+            <div class="content-card flex-shrink-0 relative">
+                <img src="https://images.unsplash.com/photo-1518676590629-3dcbd9c5a5c9?w=120&h=160&fit=crop" 
+                     alt="电影海报" class="content-image">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="p-3">
+                    <h4 class="font-medium text-sm mb-1">黑豹2</h4>
+                    <div class="flex items-center justify-between">
+                        <span class="rating">7.8</span>
+                        <span class="text-xs text-red-400">新片</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-card flex-shrink-0 relative">
+                <img src="https://images.unsplash.com/photo-1509347528160-9329d33b2588?w=120&h=160&fit=crop" 
+                     alt="电影海报" class="content-image">
+                <div class="play-button">
+                    <i class="fas fa-play"></i>
+                </div>
+                <div class="p-3">
+                    <h4 class="font-medium text-sm mb-1">雷神4</h4>
+                    <div class="flex items-center justify-between">
+                        <span class="rating">7.5</span>
+                        <span class="text-xs text-red-400">新片</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
